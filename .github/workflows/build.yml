@@ -1,0 +1,30 @@
+# .github/workflows/build.yml
+
+name: Build BorderlessGaming Solution
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build with MSBuild
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild path
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Restore NuGet packages
+      run: nuget restore BorderlessGaming.sln
+
+    - name: Build Debug | Any CPU
+      run: msbuild BorderlessGaming.sln /t:Rebuild /p:Configuration=Debug /p:Platform="Any CPU"
+
+    - name: Build Release | Any CPU
+      run: msbuild BorderlessGaming.sln /t:Rebuild /p:Configuration=Release /p:Platform="Any CPU"
